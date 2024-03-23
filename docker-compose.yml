@@ -1,0 +1,37 @@
+version: "3.7"
+
+x-shared-config:
+  base: &base
+    image: beevelop/ionic:v2023.10.1
+    tmpfs:
+      - /tmp
+    user: ":1420"
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    stdin_open: true
+    tty: true
+    ports:
+      - 8100:8100
+      - 35729:35729
+    volumes:
+      - ./:/app:cached
+      # - ./node_modules:/app/node_modules
+    working_dir: "/app"
+
+services:
+  android_live_reload:
+    <<: *base
+    command: ionic cap run android -l --host=0.0.0.0 --port=8100 --public-host=X.X.X.X
+
+  app:
+    <<: *base
+    command: ionic serve -c --host=0.0.0.0 -port=8100 --consolelogs
+    
+  shell:
+    <<: *base
+    command: /bin/sh
+
+networks:
+  default:
+    external: true
+    name: "${DOCKER_RANGERS_NETWORK:-rangers}"
