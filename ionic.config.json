@@ -1,0 +1,7 @@
+{
+  "name": "ionic-rangers",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
