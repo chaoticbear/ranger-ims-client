@@ -2,7 +2,8 @@ version: "3.7"
 
 x-shared-config:
   base: &base
-    image: beevelop/ionic:v2023.10.1
+    # image: beevelop/ionic:v2023.10.1
+    build: "./docker"
     tmpfs:
       - /tmp
     user: ":1420"
