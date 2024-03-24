@@ -1,48 +1,33 @@
-import type { APILogin, Login } from '../types'
+import type { Login } from '../types'
+import { apiFetch } from '../utils'
+import type { ErrorResult, LoginResult } from '../utils/api-fetch'
 import storage from 'react-secure-storage'
 
-type LoginResult = {
-  error?: string
-  token?: string
-}
-
-const imsLogin = async (credentials: APILogin): Promise<LoginResult> => {
-  try {
-    const response = await fetch('/api/auth', {
-      body: JSON.stringify(credentials),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    })
-
-    const result = await response.json()
-    // console.log("Success:", result);
-
-    return {
-      token: result.token,
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error:', error)
-
-    return {
-      error,
-    } as LoginResult
-  }
-}
-
 const useAuth = async ({ password, username }: Login) => {
-  const { error, token } = await imsLogin({
-    identification: username,
-    password,
+  const result = await apiFetch({
+    method: 'POST',
+    path: '/api/auth',
+    query: {
+      identification: username,
+      password,
+    },
   })
 
-  if (error) return { error }
+  if (result && Object.hasOwn(result, 'error')) {
+    const errorResult = result as ErrorResult
 
-  token && storage.setItem('ims_token', token)
+    return { error: errorResult.error, success: false }
+  }
 
-  return { success: true }
+  if (result && Object.hasOwn(result, 'token')) {
+    const loginResult = result as LoginResult
+
+    storage.setItem('ims_token', loginResult.token)
+
+    return { error: false, success: true }
+  }
+
+  return { error: 'Unknown Error', success: false }
 }
 
 export { useAuth }
