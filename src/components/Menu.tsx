@@ -1,4 +1,6 @@
+import { useLogOut } from '../hooks'
 import {
+  IonButton,
   IonContent,
   IonIcon,
   IonItem,
@@ -11,6 +13,7 @@ import {
 } from '@ionic/react'
 import { mailOutline, mailSharp, paperPlaneOutline, paperPlaneSharp } from 'ionicons/icons'
 import { useLocation } from 'react-router-dom'
+import secureLocalStorage from 'react-secure-storage'
 
 import './Menu.css'
 
@@ -38,13 +41,22 @@ const appPages: AppPage[] = [
 
 const Menu: React.FC = () => {
   const location = useLocation()
+  const username = secureLocalStorage.getItem("logged_in_user") as string
+
+  const handleLogOut = () => useLogOut()
 
   return (
     <IonMenu contentId="main" type="overlay">
       <IonContent>
         <IonList id="inbox-list">
-          <IonListHeader>Inbox</IonListHeader>
-          <IonNote>hi@ionicframework.com</IonNote>
+          {username ?
+            <>
+              <IonListHeader>Ranger {username}</IonListHeader>
+              <IonButton onClick={handleLogOut} size="small">Log Out</IonButton>
+            </>
+          :
+            <IonNote>Logged Out</IonNote>
+          }
           {appPages.map((appPage) => {
             return (
               <IonMenuToggle autoHide={false} key={appPage.title}>

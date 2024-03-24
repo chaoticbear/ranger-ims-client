@@ -23,6 +23,7 @@ const useAuth = async ({ password, username }: Login) => {
     const loginResult = result as LoginResult
 
     storage.setItem('ims_token', loginResult.token)
+    storage.setItem('logged_in_user', username)
 
     return { error: false, success: true }
   }
