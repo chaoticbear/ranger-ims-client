@@ -14,6 +14,8 @@ const apiFetch = async ({
 }: ApiFetchProps): Promise<Incident | Incident[] | false> => {
   const token = storage.getItem('ims_token')
 
+  if (!token || token === '') return false
+
   try {
     const response = await fetch(path, {
       body: JSON.stringify(query),
