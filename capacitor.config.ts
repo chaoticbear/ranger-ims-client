@@ -1,12 +1,12 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import type { CapacitorConfig } from '@capacitor/cli'
 
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'ionic-rangers',
-  webDir: 'dist',
   server: {
-    androidScheme: 'https'
-  }
-};
+    androidScheme: 'http',
+  },
+  webDir: 'dist',
+}
 
-export default config;
+export default config
