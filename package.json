@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@capacitor-community/electron": "^5.0.1",
     "@capacitor/android": "5.7.4",
     "@capacitor/app": "5.0.7",
     "@capacitor/core": "5.7.4",
@@ -50,6 +51,9 @@
   "scripts": {
     "build": "tsc && vite build",
     "dev": "vite",
+    "electron:linux": "electron-packager ./electron IonicRangers --overwrite --asar --platform=linux --arch=all --prune=true --out=release-builds --version-string.ProductName='Ionic Rangers'",
+    "electron:mac": "electron-packager ./electron IonicRangers --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
+    "electron:win": "electron-packager ./electron IonicRangers --overwrite --asar --platform=win32 --prune=true --out=release-builds --version-string.FileDescription=CE --version-string.ProductName='Ionic Rangers'",
     "lint": "eslint",
     "preview": "vite preview",
     "test.e2e": "cypress run",
