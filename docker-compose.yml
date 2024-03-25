@@ -4,11 +4,13 @@ x-shared-config:
   base: &base
     # image: beevelop/ionic:v2023.10.1
     build: "./docker"
+    image: ionic
     tmpfs:
       - /tmp
     user: ":1420"
     environment:
       - NODE_ENV=${NODE_ENV:-development}
+      - ANDROID_ADB_SERVER_ADDRESS=${ANDROID_ADB_SERVER_ADDRESS:-host.docker.internal}
     stdin_open: true
     tty: true
     ports:
@@ -16,21 +18,46 @@ x-shared-config:
       - 35729:35729
     volumes:
       - ./:/app:cached
+      - ~/.gradle/cache:/root/.gradle/
       # - ./node_modules:/app/node_modules
     working_dir: "/app"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 services:
   android_live_reload:
     <<: *base
-    command: ionic cap run android -l --host=0.0.0.0 --port=8100 --public-host=X.X.X.X
+    container_name: ionic_rangers_android
+    command: ionic cap run android -l --external --consolelogs --skip-plugins eslint
+    environment: 
+     - "VITE_BACKEND_API_URL=${LOCAL_BACKEND_API_URL}"
+    network_mode: host
 
   app:
     <<: *base
-    command: ionic serve -c --host=0.0.0.0 -port=8100 --consolelogs
+    container_name: ionic_rangers_webapp
+    command: ionic serve -c --external --consolelogs
+
+  app_host:
+    <<: *base
+    container_name: ionic_rangers_webapp_host_mode
+    command: ionic serve -c --external --consolelogs
+    environment: 
+     - "VITE_BACKEND_API_URL=${LOCAL_BACKEND_API_URL}"
+    network_mode: host
     
   shell:
     <<: *base
+    container_name: ionic_rangers_shell
     command: /bin/sh
+
+  shell_host:
+    <<: *base
+    container_name: ionic_rangers_shell_host_mode
+    environment: 
+     - "VITE_BACKEND_API_URL=${LOCAL_BACKEND_API_URL}"
+    command: /bin/sh
+    network_mode: host
 
 networks:
   default:
