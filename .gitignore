@@ -31,3 +31,7 @@ yarn-error.log*
 # Environment
 .env*
 !.env*.sample
+
+# Unmodified Platform Assets
+/electron
+/android
