@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@capacitor/android": "5.7.4",
     "@capacitor/app": "5.0.7",
     "@capacitor/core": "5.7.4",
     "@capacitor/haptics": "5.0.7",
