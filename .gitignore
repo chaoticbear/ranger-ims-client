@@ -30,4 +30,4 @@ yarn-error.log*
 
 # Environment
 .env*
-!.env.sample
+!.env*.sample
