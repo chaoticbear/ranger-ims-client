@@ -35,3 +35,6 @@ yarn-error.log*
 # Unmodified Platform Assets
 /electron
 /android
+
+# Release Builds
+/release-builds
