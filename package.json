@@ -50,7 +50,7 @@
   "name": "ionic-rangers",
   "private": true,
   "scripts": {
-    "build": "tsc && vite build",
+    "build": "ionic build && npx cap copy",
     "dev": "vite",
     "electron:linux": "electron-packager ./electron IonicRangers --overwrite --asar --platform=linux --arch=all --prune=true --out=release-builds --version-string.ProductName='Ionic Rangers'",
     "electron:mac": "electron-packager ./electron IonicRangers --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
