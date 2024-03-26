@@ -1,16 +1,15 @@
+import { LoginContext } from '../../contexts/login'
 import { useAuth } from '../../hooks'
 import type { Login as LoginProps } from '../../types'
 import { IonButton, IonContent, IonInput, IonItem, IonList } from '@ionic/react'
-import React, { useEffect, useState } from 'react'
+import type { FC} from 'react'
+import  { useContext, useEffect, useState } from 'react'
 
-type LoginDialogProps = {
-  setShowModal: (value: boolean) => void
-}
-
-const LoginDialog: React.FC<LoginDialogProps> = ({ setShowModal }) => {
+const LoginDialog: FC = () => {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ disabled, setDisabled ] = useState(true)
+  const { setLoggedIn } = useContext(LoginContext)
 
   useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
@@ -32,21 +31,25 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ setShowModal }) => {
   }, [password, username])
 
   const handleSubmit = async ({ password, username }: LoginProps) => {
-    if (disabled) return
+    if (disabled) {
+      return
+    }
 
     const {success} = await useAuth({password, username})
 
-    success && setShowModal(false)
+    if(success) {
+      setLoggedIn({loggedIn: true, username})
+    }
   }
 
   return (
     <IonContent>
       <IonList>
         <IonItem>
-          <IonInput label="Handle" labelPlacement="floating" onIonInput={(e) => setUsername(e.detail.value || username)} value={username}></IonInput>
+          <IonInput label="Handle" labelPlacement="floating" onIonInput={(e) => setUsername(e.detail.value || '')} value={username}></IonInput>
         </IonItem>
         <IonItem>
-          <IonInput label="Password" labelPlacement="floating"  onIonInput={(e) => setPassword(e.detail.value || password)} type="text" value={password}></IonInput>
+          <IonInput label="Password" labelPlacement="floating"  onIonInput={(e) => setPassword(e.detail.value || '')} type="password" value={password}></IonInput>
         </IonItem>
       </IonList>
       <IonButton disabled={disabled} onClick={() => handleSubmit({ password, username })}>Login</IonButton>

@@ -1,4 +1,5 @@
 import Menu from './components/Menu'
+import { LoginContextProvider } from './contexts/login'
 import Page from './pages/Page'
 import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
@@ -27,15 +28,17 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonSplitPane contentId="main">
-          <Menu />
-          <IonRouterOutlet id="main">
-            <Route exact={true} path="/">
-              <Redirect to="/screens/incidents" />
-            </Route>
-            <Route exact={true} path="/screens/:name/:item?">
-              <Page />
-            </Route>
-          </IonRouterOutlet>
+          <LoginContextProvider>
+            <Menu />
+            <IonRouterOutlet id="main">
+              <Route exact={true} path="/">
+                <Redirect to="/screens/incidents" />
+              </Route>
+              <Route exact={true} path="/screens/:name/:item?">
+                <Page />
+              </Route>
+            </IonRouterOutlet>
+          </LoginContextProvider>
         </IonSplitPane>
       </IonReactRouter>
     </IonApp>

@@ -1,22 +1,16 @@
 import IncidentList from '../components/IncidentList'
 import IncidentView from '../components/IncidentView'
 import LoginDialog from '../components/LoginDialog'
-import { useGetToken } from '../hooks'
+import { LoginContext } from '../contexts/login'
 import { IonButtons, IonContent, IonHeader, IonMenuButton, IonModal, IonPage, IonTitle, IonToolbar } from '@ionic/react'
-import { useEffect, useState } from 'react'
+import { useContext} from 'react'
 import { useParams } from 'react-router'
 
 import './Page.css'
 
 const Page: React.FC = () => {
   const { item, name } = useParams<{ item?: string, name: string; }>()
-  const [showModal, setShowModal] = useState(false)
-
-  useEffect(() => {
-    const token = useGetToken()
-
-    if(!token) setShowModal(true)
-  }, [])
+  const { loggedIn: { loggedIn } } = useContext(LoginContext)
 
   return (
     <IonPage>
@@ -41,8 +35,8 @@ const Page: React.FC = () => {
         {name === "incidents" && item &&
           <IncidentView item={ item } />
         }
-        <IonModal isOpen={showModal}>
-          <LoginDialog setShowModal={setShowModal} />
+        <IonModal isOpen={!loggedIn}>
+          <LoginDialog />
         </IonModal>
       </IonContent>
     </IonPage>

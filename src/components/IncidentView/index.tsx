@@ -1,8 +1,9 @@
+import { LoginContext } from "../../contexts/login"
 import { useGetIncident } from "../../hooks"
 import type { Incident } from "../../types"
 import { convertDateTime } from "../../utils"
 import { IonContent, IonItem, IonLabel } from "@ionic/react"
-import {  useEffect, useState } from "react"
+import {  useContext, useEffect, useState } from "react"
 
 type IncidentViewProps = {
   item: string
@@ -11,16 +12,21 @@ type IncidentViewProps = {
 const IncidentView = ({ item }: IncidentViewProps) => {
   const [incident, setIncident] = useState<Incident | false>(false)
   const formatedCreatedDate = incident && convertDateTime(incident.created) || ""
+  const {loggedIn: { loggedIn }} = useContext(LoginContext)
 
   useEffect(() => {
     const getIncident = async () => {
+      if(!loggedIn) {
+        setIncident(false)
+
+        return
+      }
+
       setIncident( await useGetIncident({ eventYear: "2030", incidentNumber: item }) || false )
     }
 
-    if (!incident) {
-      getIncident()
-    }
-  }, [])
+    getIncident()
+  }, [loggedIn])
 
   return (
     <IonContent>
